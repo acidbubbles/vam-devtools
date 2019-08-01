@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// VaM Utilities
+/// By Acidbubbles
+/// Prints Unity logs to the VaM messages log
+/// Source: https://github.com/acidbubbles/vam-utilities
+/// </summary>
 public class ForwardUnityLogsToSceneLogs : MVRScript
 {
     private static bool _registeredToUnityLogs;

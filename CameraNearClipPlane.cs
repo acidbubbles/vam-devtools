@@ -1,5 +1,11 @@
 using UnityEngine;
 
+/// <summary>
+/// VaM Utilities
+/// By Acidbubbles
+/// Changes the camera clip plane, to see through walls for example
+/// Source: https://github.com/acidbubbles/vam-utilities
+/// </summary>
 public class CameraNearClipPlane : MVRScript
 {
     private Camera _mainCamera;

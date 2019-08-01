@@ -1,6 +1,12 @@
 using UnityEngine;
 
-public class Triggerables : MVRScript
+/// <summary>
+/// VaM Utilities
+/// By Acidbubbles
+/// Allows triggers that affect time scale
+/// Source: https://github.com/acidbubbles/vam-utilities
+/// </summary>
+public class TimeScaleController : MVRScript
 {
     private TimeControl _timeControl;
 
