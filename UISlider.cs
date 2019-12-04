@@ -18,8 +18,9 @@ public class UISlider : MVRScript
     private JSONStorableStringChooser _storableJSON;
     private JSONStorableStringChooser _floatParamJSON;
     private Atom _atom;
-    private Transform _slider;
+    private Transform _sliderTransform;
     private JSONStorableFloat _targetFloatParam;
+    private UIDynamicSlider _sliderUI;
 
     public override void Init()
     {
@@ -29,8 +30,8 @@ public class UISlider : MVRScript
         {
             _labelJSON = new JSONStorableString("Label", "My Slider", label =>
             {
-                if (_slider == null) return;
-                _slider.GetComponent<UIDynamicSlider>().label = label;
+                if (_sliderTransform == null) return;
+                _sliderTransform.GetComponent<UIDynamicSlider>().label = label;
             });
             RegisterString(_labelJSON);
             CreateTextInput(_labelJSON);
@@ -164,10 +165,12 @@ public class UISlider : MVRScript
         if (_targetFloatParam == null) throw LogError(new NullReferenceException($"Float JSON param {floatParamName} of storable {_storableJSON.val} of atom {_atomJSON.val} does not exist"));
 
         _valueJSON.constrained = false;
+        _valueJSON.defaultVal = _targetFloatParam.defaultVal;
         _valueJSON.val = _targetFloatParam.val;
         _valueJSON.min = _targetFloatParam.min;
         _valueJSON.max = _targetFloatParam.max;
         _valueJSON.constrained = _targetFloatParam.constrained;
+        _sliderUI.Configure(_valueJSON.name, _valueJSON.min, _valueJSON.max, _valueJSON.defaultVal, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
     }
 
     private void UpdateValue(float v)
@@ -178,7 +181,7 @@ public class UISlider : MVRScript
 
     public void OnEnable()
     {
-        if (_slider != null || _atom == null) return;
+        if (_sliderTransform != null || _atom == null) return;
 
         try
         {
@@ -195,25 +198,28 @@ public class UISlider : MVRScript
         var canvas = _atom.GetComponentInChildren<Canvas>();
         if (canvas == null) throw new NullReferenceException("Could not find a canvas to attach to");
 
-        _slider = Instantiate(manager.configurableSliderPrefab.transform);
-        if (_slider == null) throw new NullReferenceException("Could not instantiate configurableSliderPrefab");
-        _slider.SetParent(canvas.transform, false);
-        _slider.gameObject.SetActive(true);
+        _sliderTransform = Instantiate(manager.configurableSliderPrefab.transform);
+        if (_sliderTransform == null) throw new NullReferenceException("Could not instantiate configurableSliderPrefab");
+        _sliderTransform.SetParent(canvas.transform, false);
+        _sliderTransform.gameObject.SetActive(true);
 
-        var ui = _slider.GetComponent<UIDynamicSlider>();
-        if (ui == null) throw new NullReferenceException("Could not find a UIDynamicSlider component");
-        ui.Configure(_valueJSON.name, _valueJSON.min, _valueJSON.max, _valueJSON.val, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
-        _valueJSON.slider = ui.slider;
+        _sliderUI = _sliderTransform.GetComponent<UIDynamicSlider>();
+        if (_sliderUI == null) throw new NullReferenceException("Could not find a UIDynamicSlider component");
+        _sliderUI.Configure(_valueJSON.name, _valueJSON.min, _valueJSON.max, _valueJSON.val, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
+        _valueJSON.slider = _sliderUI.slider;
+
+        _sliderTransform.Translate(Vector3.down * 0.3f, Space.Self);
+        _sliderTransform.Translate(Vector3.right * 0.35f, Space.Self);
     }
 
     public void OnDisable()
     {
-        if (_slider == null) return;
+        if (_sliderTransform == null) return;
 
         try
         {
             _valueJSON.slider = null;
-            Destroy(_slider.gameObject);
+            Destroy(_sliderTransform.gameObject);
         }
         catch (Exception exc)
         {
