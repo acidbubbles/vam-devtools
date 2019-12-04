@@ -170,7 +170,7 @@ public class UISlider : MVRScript
         _valueJSON.min = _targetFloatParam.min;
         _valueJSON.max = _targetFloatParam.max;
         _valueJSON.constrained = _targetFloatParam.constrained;
-        _sliderUI.Configure(_labelJSON.name, _valueJSON.min, _valueJSON.max, _valueJSON.defaultVal, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
+        _sliderUI.Configure(_labelJSON.val, _valueJSON.min, _valueJSON.max, _valueJSON.defaultVal, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
     }
 
     private void UpdateValue(float v)
@@ -205,7 +205,7 @@ public class UISlider : MVRScript
 
         _sliderUI = _sliderTransform.GetComponent<UIDynamicSlider>();
         if (_sliderUI == null) throw new NullReferenceException("Could not find a UIDynamicSlider component");
-        _sliderUI.Configure(_labelJSON.name, _valueJSON.min, _valueJSON.max, _valueJSON.val, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
+        _sliderUI.Configure(_labelJSON.val, _valueJSON.min, _valueJSON.max, _valueJSON.val, _valueJSON.constrained, "F2", true, !_valueJSON.constrained);
         _valueJSON.slider = _sliderUI.slider;
 
         _sliderTransform.Translate(Vector3.down * 0.3f, Space.Self);
