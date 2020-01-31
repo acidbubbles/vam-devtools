@@ -32,6 +32,10 @@ public class ForwardUnityLogsToSceneLogs : MVRScript
     public static void DebugLog(string condition, string stackTrace, LogType type)
     {
         if (condition == null || condition.StartsWith("Log ") || string.IsNullOrEmpty(stackTrace)) return;
-        SuperController.LogMessage(type + " " + condition + " " + stackTrace);
+        var msg = $"{type} {condition} {stackTrace}";
+        if (type == LogType.Error || type == LogType.Exception)
+            SuperController.LogError(msg);
+        else
+            SuperController.LogMessage(msg);
     }
 }
