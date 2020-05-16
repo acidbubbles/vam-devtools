@@ -5,9 +5,9 @@ using UnityEngine;
 
 /// <summary>
 /// VaM Utilities
-/// By Acidbubbles
+/// By AcidBubbles
 /// Control for sliding between values
-/// Source: https://github.com/acidbubbles/vam-utilities
+/// Source: https://github.com/AcidBubbles/vam-utilities
 /// </summary>
 public class Diagnostics : MVRScript
 {
