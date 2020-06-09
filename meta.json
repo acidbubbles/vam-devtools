@@ -9,7 +9,10 @@
    "promotionalLink" : "https://github.com/AcidBubbles/vam-devtools", 
    "programVersion" : "1.19.0.5", 
    "contentList" : [ 
-      "Custom\\Scripts\\AcidBubbles\\DevTools\\DevTools.cs"
+      "Custom\\Scripts\\AcidBubbles\\DevTools\\Diagnostics.cs",
+      "Custom\\Scripts\\AcidBubbles\\DevTools\\OnSpawnAtom.cs",
+      "Custom\\Scripts\\AcidBubbles\\DevTools\\ForwardUnityLogsToSceneLogs.cs",
+      "Custom\\Scripts\\AcidBubbles\\DevTools\\ForceEditMode.cs"
    ], 
    "dependencies" : { 
    }
