@@ -18,6 +18,9 @@ public class ForceEditMode : MVRScript
         while (SuperController.singleton.isLoading)
             yield return 0;
 
+        while (SuperController.singleton.freezeAnimation)
+            yield return 0;
+
         yield return 0;
 
         SuperController.singleton.gameMode = SuperController.GameMode.Edit;

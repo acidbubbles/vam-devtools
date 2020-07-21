@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -10,6 +11,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 {
     private JSONStorableBool _disableCollisionJSON;
     private JSONStorableBool _autoSelectJSON;
+    private bool _ready = false;
 
     public override void Init()
     {
@@ -20,6 +22,21 @@ public class DisableCollisionOnSpawnAtom : MVRScript
         _autoSelectJSON = new JSONStorableBool("Auto select on spawn", true);
         RegisterBool(_autoSelectJSON);
         CreateToggle(_autoSelectJSON);
+
+        StartCoroutine(WaitForLoadingComplete());
+    }
+
+    private IEnumerator WaitForLoadingComplete()
+    {
+        while (SuperController.singleton.isLoading)
+            yield return 0;
+
+        while (SuperController.singleton.freezeAnimation)
+            yield return 0;
+
+        yield return 0;
+
+        _ready = true;
     }
 
     public void OnEnable()
@@ -34,6 +51,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 
     private void OnAtomUIDsChanged(List<string> atomUIDs)
     {
+        if (!_ready) return;
         var sctrl = SuperController.singleton;
         var sortAtomUIDs = sctrl.sortAtomUIDs;
         sctrl.sortAtomUIDs = false;
