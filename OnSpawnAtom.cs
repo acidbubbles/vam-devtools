@@ -5,7 +5,7 @@ using System.Collections.Generic;
 /// VaM Dev Tools
 /// By AcidBubbles
 /// Automatically switches to Edit mode when initialized
-/// Source: https://github.com/AcidBubbles/vam-devtools
+/// Source: https://github.com/acidbubbles/vam-devtools
 /// </summary>
 public class DisableCollisionOnSpawnAtom : MVRScript
 {

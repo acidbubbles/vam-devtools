@@ -11,8 +11,6 @@ using UnityEngine;
 /// </summary>
 public class Diagnostics : MVRScript
 {
-    private TimeControl _timeControl;
-
     public override void Init()
     {
         CreateButton("Get Hierarchy").button.onClick.AddListener(() => SuperController.LogMessage(GetHierarchy(containingAtom.gameObject)));
