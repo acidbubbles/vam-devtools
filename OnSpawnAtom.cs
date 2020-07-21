@@ -37,6 +37,13 @@ public class DisableCollisionOnSpawnAtom : MVRScript
         yield return 0;
 
         _ready = true;
+
+        foreach (var atom in SuperController.singleton.GetAtoms())
+        {
+            if (atom.type != "Person") continue;
+            SuperController.singleton.SelectController(atom.mainController);
+            break;
+        }
     }
 
     public void OnEnable()
