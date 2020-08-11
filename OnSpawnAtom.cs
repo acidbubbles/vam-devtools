@@ -38,11 +38,14 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 
         _ready = true;
 
-        foreach (var atom in SuperController.singleton.GetAtoms())
+        if (_autoSelectJSON.val)
         {
-            if (atom.type != "Person") continue;
-            SuperController.singleton.SelectController(atom.mainController);
-            break;
+            foreach (var atom in SuperController.singleton.GetAtoms())
+            {
+                if (atom.type != "Person") continue;
+                SuperController.singleton.SelectController(atom.mainController);
+                break;
+            }
         }
     }
 
