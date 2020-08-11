@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -9,12 +11,34 @@ using UnityEngine;
 /// </summary>
 public class ForceEditMode : MVRScript
 {
-    public override void Init()
+    private Coroutine _coroutine;
+
+    public void OnEnable()
     {
-        StartCoroutine(InitCoroutine());
+        _coroutine = StartCoroutine(EnableEditModeCoroutine());
+        SuperController.singleton.onAtomUIDsChangedHandlers += OnAtomUIDsChanged;
     }
 
-    private IEnumerator InitCoroutine()
+    public void OnDisable()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+        SuperController.singleton.onAtomUIDsChangedHandlers -= OnAtomUIDsChanged;
+    }
+
+    private void OnAtomUIDsChanged(List<string> atomUIDs)
+    {
+        if (!enabled) return;
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(EnableEditModeCoroutine());
+        }
+    }
+
+    private IEnumerator EnableEditModeCoroutine()
     {
         while (SuperController.singleton.isLoading)
             yield return 0;
@@ -25,21 +49,6 @@ public class ForceEditMode : MVRScript
         yield return 0;
 
         SuperController.singleton.gameMode = SuperController.GameMode.Edit;
-
-        //after the first run, monitor for scene loads and force Edit mode again after each one
-        StartCoroutine(WaitForNextLoadCoroutine());
-    }
-
-    private IEnumerator WaitForNextLoadCoroutine()
-    {
-        while (! SuperController.singleton.isLoading)
-        {
-            yield return new WaitForSeconds(1.0f);
-            yield return 0;
-        }
-
-        yield return 0;
-
-        StartCoroutine(InitCoroutine());
+        _coroutine = null;
     }
 }
