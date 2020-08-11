@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 /// <summary>
 /// VaM Dev Tools
@@ -68,8 +69,8 @@ public class DisableCollisionOnSpawnAtom : MVRScript
         sctrl.sortAtomUIDs = false;
         var atoms = sctrl.GetAtomUIDs();
         sctrl.sortAtomUIDs = sortAtomUIDs;
-        var latest = atoms[atoms.Count - 1];
-        var atom = sctrl.GetAtomByUid(latest);
+        if (atoms.Count == 0) return;
+        var atom = sctrl.GetAtomByUid(atoms[atoms.Count - 1]);
         if (_disableCollisionJSON.val)
             atom.collisionEnabledJSON.val = false;
         if (_autoSelectJSON.val)
