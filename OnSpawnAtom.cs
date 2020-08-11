@@ -63,6 +63,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
     {
         if (!_ready) return;
         var sctrl = SuperController.singleton;
+        if (sctrl.isLoading) return;
         var sortAtomUIDs = sctrl.sortAtomUIDs;
         sctrl.sortAtomUIDs = false;
         var atoms = sctrl.GetAtomUIDs();
