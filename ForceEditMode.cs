@@ -11,44 +11,17 @@ using UnityEngine;
 /// </summary>
 public class ForceEditMode : MVRScript
 {
-    private Coroutine _coroutine;
-
-    public void OnEnable()
+    public override void Init()
     {
-        _coroutine = StartCoroutine(EnableEditModeCoroutine());
-        SuperController.singleton.onAtomUIDsChangedHandlers += OnAtomUIDsChanged;
+        SuperController.singleton.onSceneLoadedHandlers += EnableEditMode;
     }
 
-    public void OnDisable()
-    {
-        if (_coroutine != null)
-        {
-            StopCoroutine(_coroutine);
-            _coroutine = null;
-        }
-        SuperController.singleton.onAtomUIDsChangedHandlers -= OnAtomUIDsChanged;
+    public void OnDestroy() {
+        SuperController.singleton.onSceneLoadedHandlers -= EnableEditMode;
     }
 
-    private void OnAtomUIDsChanged(List<string> atomUIDs)
+    public void EnableEditMode()
     {
-        if (!enabled) return;
-        if (_coroutine == null)
-        {
-            _coroutine = StartCoroutine(EnableEditModeCoroutine());
-        }
-    }
-
-    private IEnumerator EnableEditModeCoroutine()
-    {
-        while (SuperController.singleton.isLoading)
-            yield return 0;
-
-        while (SuperController.singleton.freezeAnimation)
-            yield return 0;
-
-        yield return 0;
-
         SuperController.singleton.gameMode = SuperController.GameMode.Edit;
-        _coroutine = null;
     }
 }
