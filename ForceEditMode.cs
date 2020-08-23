@@ -11,17 +11,56 @@ using UnityEngine;
 /// </summary>
 public class ForceEditMode : MVRScript
 {
-    public override void Init()
+    private Coroutine _coroutine;
+
+    public void OnEnable()
     {
-        SuperController.singleton.onSceneLoadedHandlers += EnableEditMode;
+        _coroutine = StartCoroutine(EnableEditModeCoroutine());
+#if (VAM_GT_1_20)
+        SuperController.singleton.onSceneLoadedHandlers += OnSceneLoaded;
+#else
+        SuperController.singleton.onAtomUIDsChangedHandlers += OnAtomUIDsChanged;
+#endif
     }
 
-    public void OnDestroy() {
-        SuperController.singleton.onSceneLoadedHandlers -= EnableEditMode;
+    public void OnDisable()
+    {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+            _coroutine = null;
+        }
+#if (VAM_GT_1_20)
+        SuperController.singleton.onSceneLoadedHandlers -= OnSceneLoaded;
+#else
+        SuperController.singleton.onAtomUIDsChangedHandlers -= OnAtomUIDsChanged;
+#endif
     }
 
-    public void EnableEditMode()
+#if (VAM_GT_1_20)
+    private void OnSceneLoaded()
+#else
+    private void OnAtomUIDsChanged(List<string> atomUIDs)
+#endif
     {
+        if (!enabled) return;
+        if (_coroutine == null)
+        {
+            _coroutine = StartCoroutine(EnableEditModeCoroutine());
+        }
+    }
+
+    private IEnumerator EnableEditModeCoroutine()
+    {
+        while (SuperController.singleton.isLoading)
+            yield return 0;
+
+        while (SuperController.singleton.freezeAnimation)
+            yield return 0;
+
+        yield return 0;
+
         SuperController.singleton.gameMode = SuperController.GameMode.Edit;
+        _coroutine = null;
     }
 }
