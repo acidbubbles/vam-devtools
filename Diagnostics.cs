@@ -54,7 +54,7 @@ public class Diagnostics : MVRScript
             " [" + o.tag + "] " +
             o.name +
             " -> " +
-            (showScripts ? string.Join(", ", o.GetComponents<MonoBehaviour>().Select(b => b.ToString()).ToArray()) : "")
+            (showScripts ? string.Join(", ", o.GetComponents<MonoBehaviour>().Select(b => b?.ToString() ?? "[null]").ToArray()) : "")
             );
         for (int i = 0; i < o.transform.childCount; i++)
         {
