@@ -65,6 +65,7 @@
     <Compile Include="Diagnostics.cs" />
     <Compile Include="ForceEditMode.cs" />
     <Compile Include="ForwardUnityLogsToSceneLogs.cs" />
+    <Compile Include="GameObjectExplorer.cs" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
