@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -10,14 +12,17 @@ using UnityEngine;
 /// </summary>
 public class GameObjectExplorer : MVRScript
 {
+    private readonly Dictionary<string, Func<GameObject>> _wellknown = new Dictionary<string, Func<GameObject>>();
+    
     private const float DisplayInfoFrequency = 1f;
     private const float DisplayScriptsFrequency = 10f;
     private const bool SideLeft = false;
     private const bool SideRight = true;
 
     private JSONStorableStringChooser _siblingsJSON;
-    private JSONStorableStringChooser _childrenJSON;
     private UIDynamicButton _parentUI;
+    private JSONStorableStringChooser _childrenJSON;
+    private JSONStorableStringChooser _wellKnownJSON;
 
     private JSONStorableString _currentInfoJSON;
     private JSONStorableString _currentScriptsJSON;
@@ -27,6 +32,13 @@ public class GameObjectExplorer : MVRScript
 
     public override void Init()
     {
+        var sc = SuperController.singleton;
+        _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
+        _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
+        _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
+        _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
+        _wellknown.Add(nameof(sc.mainMenuUI), () => sc.mainMenuUI.gameObject);
+        
         _siblingsJSON = new JSONStorableStringChooser("Current", new List<string>(), null, "Select");
         _siblingsJSON.popupOpenCallback += SyncSiblings;
         _siblingsJSON.setCallbackFunction += SelectSibling;
@@ -39,6 +51,10 @@ public class GameObjectExplorer : MVRScript
         _childrenJSON.popupOpenCallback += SyncChildren;
         _childrenJSON.setCallbackFunction += SelectChild;
         CreateFilterablePopup(_childrenJSON, SideLeft);
+        
+        _wellKnownJSON = new JSONStorableStringChooser("Well Known", _wellknown.Select(kvp => kvp.Key).ToList(), "", "Well Known");
+        _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
+        CreateFilterablePopup(_wellKnownJSON, SideLeft);
 
         _currentInfoJSON = new JSONStorableString("Current GameObject", "");
         CreateTextField(_currentInfoJSON, SideRight);
@@ -65,6 +81,8 @@ public class GameObjectExplorer : MVRScript
 
     private void Select(GameObject go)
     {
+        _wellKnownJSON.valNoCallback = "";
+        
         if (go == null) return;
         
         _currentGameObject = go;
