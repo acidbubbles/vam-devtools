@@ -14,8 +14,8 @@ public class GameObjectExplorer : MVRScript
 {
     private readonly Dictionary<string, Func<GameObject>> _wellknown = new Dictionary<string, Func<GameObject>>();
     
-    private const float DisplayInfoFrequency = 1f;
-    private const float DisplayScriptsFrequency = 10f;
+    private const float DisplayInfoFrequency = 0.5f;
+    private const float DisplayScriptsFrequency = 2f;
     private const bool SideLeft = false;
     private const bool SideRight = true;
 
