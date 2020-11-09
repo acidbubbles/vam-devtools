@@ -33,53 +33,71 @@ public class GameObjectExplorer : MVRScript
 
     public override void Init()
     {
-        var sc = SuperController.singleton;
-        _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
-        _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
-        _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
-        _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
-        _wellknown.Add(nameof(sc.mainMenuUI), () => sc.mainMenuUI.gameObject);
-        if(sc.OVRRig != null) _wellknown.Add(nameof(sc.OVRRig), () => sc.OVRRig.gameObject);
-        if(sc.ViveRig != null) _wellknown.Add(nameof(sc.ViveRig), () => sc.ViveRig.gameObject);
-        if(sc.MonitorRig != null) _wellknown.Add(nameof(sc.MonitorRig), () => sc.MonitorRig.gameObject);
-        if(sc.OVRCenterCamera != null) _wellknown.Add(nameof(sc.OVRCenterCamera), () => sc.OVRCenterCamera.gameObject);
-        if(sc.ViveCenterCamera != null) _wellknown.Add(nameof(sc.ViveCenterCamera), () => sc.ViveCenterCamera.gameObject);
-        if(sc.MonitorCenterCamera != null) _wellknown.Add(nameof(sc.MonitorCenterCamera), () => sc.MonitorCenterCamera.gameObject);
-        
-        // Left
-        
-        _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).OrderBy(k => k).ToList(), "", "Well Known");
-        _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
-        var wellKnownUI = CreateFilterablePopup(_wellKnownJSON, SideLeft);
-        wellKnownUI.popupPanelHeight = 700f;
-        
-        _siblingsJSON = new JSONStorableStringChooser("Selected", new List<string>(), null, "Selected");
-        _siblingsJSON.popupOpenCallback += SyncSiblings;
-        _siblingsJSON.setCallbackFunction += SelectSibling;
-        var siblingsUI = CreateFilterablePopup(_siblingsJSON, SideLeft);
-        siblingsUI.popupPanelHeight = 900f;
-        
-        _parentUI = CreateButton("Select Parent", SideLeft);
-        _parentUI.button.onClick.AddListener(() => Select(_currentGameObject?.transform.parent?.gameObject));
-        
-        _childrenJSON = new JSONStorableStringChooser("Children", new List<string>(), null, "Select Children");
-        _childrenJSON.popupOpenCallback += SyncChildren;
-        _childrenJSON.setCallbackFunction += SelectChild;
-        var childrenUI = CreateFilterablePopup(_childrenJSON, SideLeft);
-        childrenUI.popupPanelHeight = 700f;
-        
-        _currentHierarchyJSON = new JSONStorableString("CurrentHierarchy", "");
-        CreateTextField(_currentHierarchyJSON).height = 728f;
-        
-        // Right
+        try
+        {
+            var sc = SuperController.singleton;
+            _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
+            _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
+            _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
+            _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
+            _wellknown.Add(nameof(sc.mainMenuUI), () => sc.mainMenuUI.gameObject);
+            if (sc.OVRRig != null) _wellknown.Add(nameof(sc.OVRRig), () => sc.OVRRig.gameObject);
+            if (sc.ViveRig != null) _wellknown.Add(nameof(sc.ViveRig), () => sc.ViveRig.gameObject);
+            if (sc.MonitorRig != null) _wellknown.Add(nameof(sc.MonitorRig), () => sc.MonitorRig.gameObject);
+            if (sc.OVRCenterCamera != null)
+                _wellknown.Add(nameof(sc.OVRCenterCamera), () => sc.OVRCenterCamera.gameObject);
+            if (sc.ViveCenterCamera != null)
+                _wellknown.Add(nameof(sc.ViveCenterCamera), () => sc.ViveCenterCamera.gameObject);
+            if (sc.MonitorCenterCamera != null)
+                _wellknown.Add(nameof(sc.MonitorCenterCamera), () => sc.MonitorCenterCamera.gameObject);
+            foreach (var camera in Camera.allCameras)
+            {
+                var c = camera;
+                _wellknown.Add($"Camera: {c.name}", () => c.gameObject);
+            }
 
-        _currentInfoJSON = new JSONStorableString("CurrentGameObject", "");
-        CreateTextField(_currentInfoJSON, SideRight);
-        
-        _currentScriptsJSON = new JSONStorableString("CurrentScripts", "");
-        CreateTextField(_currentScriptsJSON, SideRight).height = 980f;
+            // Left
 
-        Select(containingAtom.gameObject);
+            _wellKnownJSON = new JSONStorableStringChooser("WellKnown",
+                _wellknown.Select(kvp => kvp.Key).OrderBy(k => k).ToList(), "", "Well Known");
+            _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
+            var wellKnownUI = CreateFilterablePopup(_wellKnownJSON, SideLeft);
+            wellKnownUI.popupPanelHeight = 700f;
+
+            _siblingsJSON = new JSONStorableStringChooser("Selected", new List<string>(), null, "Selected");
+            _siblingsJSON.popupOpenCallback += SyncSiblings;
+            _siblingsJSON.setCallbackFunction += SelectSibling;
+            var siblingsUI = CreateFilterablePopup(_siblingsJSON, SideLeft);
+            siblingsUI.popupPanelHeight = 900f;
+
+            _parentUI = CreateButton("Select Parent", SideLeft);
+            _parentUI.button.onClick.AddListener(() => Select(_currentGameObject?.transform.parent?.gameObject));
+
+            _childrenJSON = new JSONStorableStringChooser("Children", new List<string>(), null, "Select Children");
+            _childrenJSON.popupOpenCallback += SyncChildren;
+            _childrenJSON.setCallbackFunction += SelectChild;
+            var childrenUI = CreateFilterablePopup(_childrenJSON, SideLeft);
+            childrenUI.popupPanelHeight = 700f;
+
+            _currentHierarchyJSON = new JSONStorableString("CurrentHierarchy", "");
+            CreateTextField(_currentHierarchyJSON).height = 728f;
+
+            // Right
+
+            _currentInfoJSON = new JSONStorableString("CurrentGameObject", "");
+            CreateTextField(_currentInfoJSON, SideRight);
+
+            _currentScriptsJSON = new JSONStorableString("CurrentScripts", "");
+            CreateTextField(_currentScriptsJSON, SideRight).height = 980f;
+
+            Select(containingAtom.gameObject);
+
+        }
+        catch (Exception exc)
+        {
+            enabled = false;
+            SuperController.LogError($"{nameof(GameObjectExplorer)}: Failed to initialize: {exc}");
+        }
     }
     
     private void SelectSibling(string val)
@@ -112,12 +130,12 @@ public class GameObjectExplorer : MVRScript
         UpdateCurrentScripts();
         
         var sb = new StringBuilder();
-        sb.AppendLine($"<b>{go.name}</b> <i>(\u260B {(go.transform.parent != null ? go.transform.parent.childCount : 0)})</i>");
+        sb.AppendLine($"<b>{go.name}</b> <i>(\u2536 {(go.transform.parent != null ? go.transform.parent.childCount : 0)})</i>");
         sb.AppendLine($"<i>... {go.transform.childCount} children</i>");
         var parent = go.transform;
         while ((parent = parent.parent) != null)
         {
-            sb.Insert(0, $"{parent.name} <i>(\u260B {(go.transform.parent != null ? go.transform.parent.childCount : 0)})</i>{Environment.NewLine}");
+            sb.Insert(0, $"{parent.name} <i>(\u2536 {(go.transform.parent != null ? parent.childCount : 0)})</i>{Environment.NewLine}");
         }
         _currentHierarchyJSON.val = sb.ToString();
     }
