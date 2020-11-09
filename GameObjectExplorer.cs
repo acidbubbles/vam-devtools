@@ -205,10 +205,13 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
 
         var sb = new StringBuilder();
         sb.AppendLine("<b>Components</b>");
-        foreach (var script in _currentGameObject.GetComponents<MonoBehaviour>())
+        
+        foreach (var script in _currentGameObject.GetComponents<Behaviour>())
         {
             sb.AppendLine();
-            sb.AppendLine($@"<b>{script.GetType()}</b>");
+            sb.AppendLine(script.enabled
+                ? $@"<b>{script.GetType()}</b>"
+                : $@"<i><b>{script.GetType()}</b> (disabled)</i>");
             {
                 var atom = script as Atom;
                 if (atom != null)
@@ -231,6 +234,16 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                 if (mo != null)
                 {
                     sb.AppendLine($"- {nameof(mo.color1DisplayName)}: {mo.color1DisplayName}");
+                    continue;
+                }
+            }
+            {
+                var cam = script as Camera;
+                if (cam != null)
+                {
+                    sb.AppendLine($"- {nameof(cam.cameraType)}: {cam.cameraType}");
+                    sb.AppendLine($"- {nameof(cam.pixelWidth)}: {cam.pixelWidth}");
+                    sb.AppendLine($"- {nameof(cam.pixelHeight)}: {cam.pixelHeight}");
                     continue;
                 }
             }
