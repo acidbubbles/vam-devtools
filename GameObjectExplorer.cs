@@ -39,17 +39,25 @@ public class GameObjectExplorer : MVRScript
         _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
         _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
         _wellknown.Add(nameof(sc.mainMenuUI), () => sc.mainMenuUI.gameObject);
+        if(sc.OVRRig != null) _wellknown.Add(nameof(sc.OVRRig), () => sc.OVRRig.gameObject);
+        if(sc.ViveRig != null) _wellknown.Add(nameof(sc.ViveRig), () => sc.ViveRig.gameObject);
+        if(sc.MonitorRig != null) _wellknown.Add(nameof(sc.MonitorRig), () => sc.MonitorRig.gameObject);
+        if(sc.OVRCenterCamera != null) _wellknown.Add(nameof(sc.OVRCenterCamera), () => sc.OVRCenterCamera.gameObject);
+        if(sc.ViveCenterCamera != null) _wellknown.Add(nameof(sc.ViveCenterCamera), () => sc.ViveCenterCamera.gameObject);
+        if(sc.MonitorCenterCamera != null) _wellknown.Add(nameof(sc.MonitorCenterCamera), () => sc.MonitorCenterCamera.gameObject);
         
         // Left
         
-        _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).ToList(), "", "Well Known");
+        _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).OrderBy(k => k).ToList(), "", "Well Known");
         _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
-        CreateFilterablePopup(_wellKnownJSON, SideLeft);
+        var wellKnownUI = CreateFilterablePopup(_wellKnownJSON, SideLeft);
+        wellKnownUI.popupPanelHeight = 700f;
         
         _siblingsJSON = new JSONStorableStringChooser("Selected", new List<string>(), null, "Selected");
         _siblingsJSON.popupOpenCallback += SyncSiblings;
         _siblingsJSON.setCallbackFunction += SelectSibling;
-        CreateFilterablePopup(_siblingsJSON, SideLeft);
+        var siblingsUI = CreateFilterablePopup(_siblingsJSON, SideLeft);
+        siblingsUI.popupPanelHeight = 900f;
         
         _parentUI = CreateButton("Select Parent", SideLeft);
         _parentUI.button.onClick.AddListener(() => Select(_currentGameObject?.transform.parent?.gameObject));
@@ -57,7 +65,8 @@ public class GameObjectExplorer : MVRScript
         _childrenJSON = new JSONStorableStringChooser("Children", new List<string>(), null, "Select Children");
         _childrenJSON.popupOpenCallback += SyncChildren;
         _childrenJSON.setCallbackFunction += SelectChild;
-        CreateFilterablePopup(_childrenJSON, SideLeft);
+        var childrenUI = CreateFilterablePopup(_childrenJSON, SideLeft);
+        childrenUI.popupPanelHeight = 700f;
         
         _currentHierarchyJSON = new JSONStorableString("CurrentHierarchy", "");
         CreateTextField(_currentHierarchyJSON).height = 728f;
