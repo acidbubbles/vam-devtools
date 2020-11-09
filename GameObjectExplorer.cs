@@ -42,6 +42,10 @@ public class GameObjectExplorer : MVRScript
         
         // Left
         
+        _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).ToList(), "", "Well Known");
+        _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
+        CreateFilterablePopup(_wellKnownJSON, SideLeft);
+        
         _siblingsJSON = new JSONStorableStringChooser("Selected", new List<string>(), null, "Selected");
         _siblingsJSON.popupOpenCallback += SyncSiblings;
         _siblingsJSON.setCallbackFunction += SelectSibling;
@@ -57,10 +61,6 @@ public class GameObjectExplorer : MVRScript
         
         _currentHierarchyJSON = new JSONStorableString("CurrentHierarchy", "");
         CreateTextField(_currentHierarchyJSON).height = 728f;
-        
-        _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).ToList(), "", "Well Known");
-        _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
-        CreateFilterablePopup(_wellKnownJSON, SideLeft);
         
         // Right
 
