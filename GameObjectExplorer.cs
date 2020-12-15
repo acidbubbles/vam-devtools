@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// VaM Utilities
@@ -37,10 +38,12 @@ public class GameObjectExplorer : MVRScript
         {
             var sc = SuperController.singleton;
             _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
+            _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
             _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
             _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
             _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
             _wellknown.Add(nameof(sc.mainMenuUI), () => sc.mainMenuUI.gameObject);
+            _wellknown.Add(nameof(sc.mainHUD), () => sc.mainHUD.gameObject);
             if (sc.OVRRig != null) _wellknown.Add(nameof(sc.OVRRig), () => sc.OVRRig.gameObject);
             if (sc.ViveRig != null) _wellknown.Add(nameof(sc.ViveRig), () => sc.ViveRig.gameObject);
             if (sc.MonitorRig != null) _wellknown.Add(nameof(sc.MonitorRig), () => sc.MonitorRig.gameObject);
@@ -244,6 +247,51 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     sb.AppendLine($"- {nameof(cam.cameraType)}: {cam.cameraType}");
                     sb.AppendLine($"- {nameof(cam.pixelWidth)}: {cam.pixelWidth}");
                     sb.AppendLine($"- {nameof(cam.pixelHeight)}: {cam.pixelHeight}");
+                    continue;
+                }
+            }
+            {
+                var uiTab = script as UITab;
+                if (uiTab != null)
+                {
+                    sb.AppendLine($"- {nameof(uiTab.name)}: {uiTab.name}");
+                    continue;
+                }
+            }
+
+            {
+                var layout = script as LayoutElement;
+                if (layout != null)
+                {
+                    sb.AppendLine($"- {nameof(layout.minWidth)}: {layout.minWidth}");
+                    sb.AppendLine($"- {nameof(layout.preferredWidth)}: {layout.preferredWidth}");
+                    sb.AppendLine($"- {nameof(layout.flexibleWidth)}: {layout.flexibleWidth}");
+                    sb.AppendLine($"- {nameof(layout.minHeight)}: {layout.minHeight}");
+                    sb.AppendLine($"- {nameof(layout.preferredHeight)}: {layout.preferredHeight}");
+                    sb.AppendLine($"- {nameof(layout.flexibleHeight)}: {layout.flexibleHeight}");
+                    continue;
+                }
+            }
+
+            {
+                var text = script as Text;
+                if (text != null)
+                {
+                    sb.AppendLine($"- {nameof(text.text)}: {text.text}");
+                    sb.AppendLine($"- {nameof(text.font)}: {text.font?.name}");
+                    sb.AppendLine($"- {nameof(text.fontSize)}: {text.fontSize}");
+                    sb.AppendLine($"- {nameof(text.alignment)}: {text.alignment}");
+                    continue;
+                }
+            }
+
+            {
+                var image = script as Image;
+                if (image != null)
+                {
+                    sb.AppendLine($"- {nameof(image.color)}: {image.color}");
+                    sb.AppendLine($"- {nameof(image.mainTexture)}: {image.mainTexture?.name}");
+                    sb.AppendLine($"- {nameof(image.mainTexture)}: {image.mainTexture?.name}");
                     continue;
                 }
             }
