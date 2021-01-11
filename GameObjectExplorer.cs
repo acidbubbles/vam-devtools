@@ -241,6 +241,15 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                 }
             }
             {
+                var ddi = script as DAZDynamicItem;
+                if (ddi != null)
+                {
+                    sb.AppendLine($"- {nameof(ddi.active)}: {ddi.active}");
+                    sb.AppendLine($"- {nameof(ddi.displayName)}: {ddi.displayName}");
+                    continue;
+                }
+            }
+            {
                 var cam = script as Camera;
                 if (cam != null)
                 {
