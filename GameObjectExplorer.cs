@@ -180,6 +180,11 @@ public class GameObjectExplorer : MVRScript
             UpdateCurrentScripts();
     }
 
+    public void DevToolsGameObjectExplorerShow(GameObject go)
+    {
+        Select(go);
+    }
+
     private void UpdateCurrentDisplay()
     {
         if (_currentGameObject == null)
