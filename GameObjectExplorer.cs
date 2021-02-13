@@ -138,7 +138,7 @@ public class GameObjectExplorer : MVRScript
         var parent = go.transform;
         while ((parent = parent.parent) != null)
         {
-            sb.Insert(0, $"{parent.name} <i>(\u2536 {(go.transform.parent != null ? parent.childCount : 0)})</i>{Environment.NewLine}");
+            sb.Insert(0, $"{parent.name} <i>(\u2536 {(go.transform.parent != null ? parent.childCount : 0)})</i>\n");
         }
         _currentHierarchyJSON.val = sb.ToString();
     }
