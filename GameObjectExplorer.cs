@@ -194,6 +194,7 @@ public class GameObjectExplorer : MVRScript
         }
 
         _currentInfoJSON.val = $@"<b>{_currentGameObject.name}</b>
+Active: {(_currentGameObject.activeInHierarchy ? "Yes" : (_currentGameObject.activeSelf ? "No (Parent)" : "No (Self)"))}
 Position: {_currentGameObject.transform.position}
 Local:     {_currentGameObject.transform.localPosition}
 Rotation: {_currentGameObject.transform.rotation.eulerAngles}
