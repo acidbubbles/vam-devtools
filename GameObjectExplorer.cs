@@ -39,6 +39,7 @@ public class GameObjectExplorer : MVRScript
             var sc = SuperController.singleton;
             _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
             _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
+            _wellknown.Add($"{nameof(GameObjectExplorer)} (current atom)", () => gameObject);
             _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
             _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
             _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
