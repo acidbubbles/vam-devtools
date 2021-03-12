@@ -38,8 +38,9 @@ public class GameObjectExplorer : MVRScript
         {
             var sc = SuperController.singleton;
             _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
+            _wellknown.Add($"{nameof(UITransform)} (current plugin)", () => UITransform.gameObject);
             _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
-            _wellknown.Add($"{nameof(GameObjectExplorer)} (current atom)", () => gameObject);
+            _wellknown.Add($"{nameof(GameObjectExplorer)} (current plugin)", () => gameObject);
             _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
             _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
             _wellknown.Add(nameof(sc.worldUI), () => sc.worldUI.gameObject);
@@ -215,6 +216,24 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
 
         var sb = new StringBuilder();
         sb.AppendLine("<b>Components</b>");
+
+        {
+            var rectTransform = _currentGameObject.GetComponent<RectTransform>();
+            if(rectTransform != null)
+            {
+                sb.AppendLine();
+                sb.AppendLine($"<b>{nameof(RectTransform)}</b>");
+
+                sb.AppendLine($"- {nameof(rectTransform.anchorMin)}: {rectTransform.anchorMin}");
+                sb.AppendLine($"- {nameof(rectTransform.anchorMax)}: {rectTransform.anchorMax}");
+                sb.AppendLine($"- {nameof(rectTransform.anchoredPosition)}: {rectTransform.anchoredPosition}");
+                sb.AppendLine($"- {nameof(rectTransform.offsetMin)}: {rectTransform.offsetMin}");
+                sb.AppendLine($"- {nameof(rectTransform.offsetMax)}: {rectTransform.offsetMax}");
+                sb.AppendLine($"- {nameof(rectTransform.pivot)}: {rectTransform.pivot}");
+                sb.AppendLine($"- {nameof(rectTransform.sizeDelta)}: {rectTransform.sizeDelta}");
+                sb.AppendLine($"- {nameof(rectTransform.rect)}: {rectTransform.rect}");
+            }
+        }
         
         foreach (var script in _currentGameObject.GetComponents<Behaviour>())
         {
@@ -276,7 +295,7 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
-                var layout = script as LayoutElement;
+                var layout = script as ILayoutElement;
                 if (layout != null)
                 {
                     sb.AppendLine($"- {nameof(layout.minWidth)}: {layout.minWidth}");
