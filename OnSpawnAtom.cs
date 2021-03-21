@@ -12,6 +12,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 {
     private JSONStorableBool _disableCollisionJSON;
     private JSONStorableBool _autoSelectJSON;
+    private int _currentCount = 0;
     private bool _ready = false;
 
     public override void Init()
@@ -37,6 +38,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 
         yield return 0;
 
+        _lastCount = SuperController.singleton.GetAtoms().Count;
         _ready = true;
 
         if (_autoSelectJSON.val)
@@ -62,9 +64,12 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 
     private void OnAtomUIDsChanged(List<string> atomUIDs)
     {
+        var previousCount = _lastCount;
+        _currentCount = SuperController.singleton.GetAtoms().Count;
         if (!_ready) return;
         var sctrl = SuperController.singleton;
         if (sctrl.isLoading) return;
+        if(_currentCount <= previousCount) return;
         var sortAtomUIDs = sctrl.sortAtomUIDs;
         sctrl.sortAtomUIDs = false;
         var atoms = sctrl.GetAtomUIDs();
