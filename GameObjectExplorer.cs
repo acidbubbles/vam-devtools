@@ -330,6 +330,28 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
+            {
+                var ovrManager = script as OVRManager;
+                if (ovrManager != null)
+                {
+                    sb.AppendLine($"- {nameof(ovrManager.usePositionTracking)}: {ovrManager.usePositionTracking}");
+                    sb.AppendLine($"- {nameof(ovrManager.useRotationTracking)}: {ovrManager.useRotationTracking}");
+                    sb.AppendLine($"- {nameof(ovrManager.trackingOriginType)}: {ovrManager.trackingOriginType}");
+                    sb.AppendLine($"- {nameof(ovrManager.useIPDInPositionTracking)}: {ovrManager.useIPDInPositionTracking}");
+                    continue;
+                }
+
+            {
+                var ovrRig = script as OVRCameraRig;
+                if (ovrRig != null)
+                {
+                    sb.AppendLine($"- {nameof(ovrRig.usePerEyeCameras)}: {ovrRig.usePerEyeCameras}");
+                    sb.AppendLine($"- {nameof(ovrRig.useFixedUpdateForTracking)}: {ovrRig.useFixedUpdateForTracking}");
+                    continue;
+                }
+            }
+            }
         }
         _currentScriptsJSON.val = sb.ToString();
 
