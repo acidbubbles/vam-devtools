@@ -37,6 +37,7 @@ public class GameObjectExplorer : MVRScript
         try
         {
             var sc = SuperController.singleton;
+            _wellknown.Add("SceneAtoms (root)", () => SuperController.singleton.transform.parent.gameObject);
             _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
             _wellknown.Add($"{nameof(UITransform)} (current plugin)", () => UITransform.gameObject);
             _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
@@ -63,8 +64,7 @@ public class GameObjectExplorer : MVRScript
 
             // Left
 
-            _wellKnownJSON = new JSONStorableStringChooser("WellKnown",
-                _wellknown.Select(kvp => kvp.Key).OrderBy(k => k).ToList(), "", "Well Known");
+            _wellKnownJSON = new JSONStorableStringChooser("WellKnown", _wellknown.Select(kvp => kvp.Key).OrderBy(k => k).ToList(), "", "Well Known");
             _wellKnownJSON.setCallbackFunction = (string val) => Select(_wellknown[val]());
             var wellKnownUI = CreateFilterablePopup(_wellKnownJSON, SideLeft);
             wellKnownUI.popupPanelHeight = 700f;
