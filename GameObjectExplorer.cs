@@ -97,6 +97,9 @@ public class GameObjectExplorer : MVRScript
 
             Select(containingAtom.gameObject);
 
+            // Keybindings
+
+            SuperController.singleton.BroadcastMessage("OnActionsProviderAvailable", this, SendMessageOptions.DontRequireReceiver);
         }
         catch (Exception exc)
         {
@@ -359,5 +362,35 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
         _currentScriptsJSON.val = sb.ToString();
 
         _nextCurrentScript = Time.realtimeSinceStartup + DisplayScriptsFrequency;
+    }
+
+    public void OnBindingsListRequested(List<object> bindings)
+    {
+        bindings.Add(new[]
+        {
+                new KeyValuePair<string, string>("Namespace", "GameObjectExplorer")
+            });
+        bindings.Add(new JSONStorableAction("SelectColliderUnderCursor", SelectColliderUnderCursor));
+    }
+
+    private void SelectColliderUnderCursor()
+    {
+        var ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+        
+        RaycastHit hit;
+        if(Physics.Raycast (ray, out hit))
+        {
+            if (hit.collider != null) {
+                Select(hit.collider.gameObject);
+                return;
+            }
+        }
+
+        Select(null);
+    }
+
+    public void OnDestroy()
+    {
+        SuperController.singleton.BroadcastMessage("OnActionsProviderDestroyed", this, SendMessageOptions.DontRequireReceiver);
     }
 }
