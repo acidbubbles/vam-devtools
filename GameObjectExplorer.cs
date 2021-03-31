@@ -123,7 +123,10 @@ public class GameObjectExplorer : MVRScript
     {
         _wellKnownJSON.valNoCallback = "Select to navigate...";
         
-        if (go == null) return;
+        if (go == null) {
+            Select(SuperController.singleton.transform.parent.gameObject);
+            return;
+        }
         
         _currentGameObject = go;
         _parentUI.label = $"Select parent: {(go.transform.parent != null ? go.transform.parent.name : "(none)")}";
