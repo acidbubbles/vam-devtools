@@ -221,34 +221,23 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
         }
 
         var sb = new StringBuilder();
-        sb.AppendLine("<b>Components</b>");
-
+        foreach (var component in _currentGameObject.GetComponents<Component>())
         {
-            var rectTransform = _currentGameObject.GetComponent<RectTransform>();
-            if(rectTransform != null)
-            {
+            if(component is Transform && !(component is RectTransform))
+                continue;
+
+            if (sb.Length > 0)
                 sb.AppendLine();
-                sb.AppendLine($"<b>{nameof(RectTransform)}</b>");
 
-                sb.AppendLine($"- {nameof(rectTransform.anchorMin)}: {rectTransform.anchorMin}");
-                sb.AppendLine($"- {nameof(rectTransform.anchorMax)}: {rectTransform.anchorMax}");
-                sb.AppendLine($"- {nameof(rectTransform.anchoredPosition)}: {rectTransform.anchoredPosition}");
-                sb.AppendLine($"- {nameof(rectTransform.offsetMin)}: {rectTransform.offsetMin}");
-                sb.AppendLine($"- {nameof(rectTransform.offsetMax)}: {rectTransform.offsetMax}");
-                sb.AppendLine($"- {nameof(rectTransform.pivot)}: {rectTransform.pivot}");
-                sb.AppendLine($"- {nameof(rectTransform.sizeDelta)}: {rectTransform.sizeDelta}");
-                sb.AppendLine($"- {nameof(rectTransform.rect)}: {rectTransform.rect}");
-            }
-        }
-        
-        foreach (var script in _currentGameObject.GetComponents<Behaviour>())
-        {
-            sb.AppendLine();
-            sb.AppendLine(script.enabled
-                ? $@"<b>{script.GetType()}</b>"
-                : $@"<i><b>{script.GetType()}</b> (disabled)</i>");
             {
-                var atom = script as Atom;
+                var script = component as Behaviour;
+                sb.AppendLine(script == null || script.enabled
+                    ? $@"<b>{component.GetType()}</b>"
+                    : $@"<i><b>{component.GetType()}</b> (disabled)</i>");
+            }
+
+            {
+                var atom = component as Atom;
                 if (atom != null)
                 {
                     sb.AppendLine($"- {nameof(atom.on)}: {atom.on}");
@@ -256,24 +245,53 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
             {
-                var fc = script as FreeControllerV3;
+                var rectTransform = component as RectTransform;
+                if(rectTransform != null)
+                {
+                    sb.AppendLine($"- {nameof(rectTransform.anchorMin)}: {rectTransform.anchorMin}");
+                    sb.AppendLine($"- {nameof(rectTransform.anchorMax)}: {rectTransform.anchorMax}");
+                    sb.AppendLine($"- {nameof(rectTransform.anchoredPosition)}: {rectTransform.anchoredPosition}");
+                    sb.AppendLine($"- {nameof(rectTransform.offsetMin)}: {rectTransform.offsetMin}");
+                    sb.AppendLine($"- {nameof(rectTransform.offsetMax)}: {rectTransform.offsetMax}");
+                    sb.AppendLine($"- {nameof(rectTransform.pivot)}: {rectTransform.pivot}");
+                    sb.AppendLine($"- {nameof(rectTransform.sizeDelta)}: {rectTransform.sizeDelta}");
+                    sb.AppendLine($"- {nameof(rectTransform.rect)}: {rectTransform.rect}");
+                    continue;
+                }
+            }
+
+            {
+                var canvas = component as Canvas;
+                if (canvas != null)
+                {
+                    sb.AppendLine($"- {nameof(canvas.worldCamera)}: {canvas.worldCamera}");
+                    sb.AppendLine($"- {nameof(canvas.renderMode)}: {canvas.renderMode}");
+                    continue;
+                }
+            }
+
+            {
+                var fc = component as FreeControllerV3;
                 if (fc != null)
                 {
                     sb.AppendLine($"- {nameof(fc.controlMode)}: {fc.controlMode}");
                     continue;
                 }
             }
+
             {
-                var mo = script as MaterialOptions;
+                var mo = component as MaterialOptions;
                 if (mo != null)
                 {
                     sb.AppendLine($"- {nameof(mo.color1DisplayName)}: {mo.color1DisplayName}");
                     continue;
                 }
             }
+
             {
-                var ddi = script as DAZDynamicItem;
+                var ddi = component as DAZDynamicItem;
                 if (ddi != null)
                 {
                     sb.AppendLine($"- {nameof(ddi.active)}: {ddi.active}");
@@ -281,8 +299,9 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
             {
-                var cam = script as Camera;
+                var cam = component as Camera;
                 if (cam != null)
                 {
                     sb.AppendLine($"- {nameof(cam.cameraType)}: {cam.cameraType}");
@@ -291,8 +310,9 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
             {
-                var uiTab = script as UITab;
+                var uiTab = component as UITab;
                 if (uiTab != null)
                 {
                     sb.AppendLine($"- {nameof(uiTab.name)}: {uiTab.name}");
@@ -301,7 +321,7 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
-                var layout = script as ILayoutElement;
+                var layout = component as ILayoutElement;
                 if (layout != null)
                 {
                     sb.AppendLine($"- {nameof(layout.minWidth)}: {layout.minWidth}");
@@ -315,7 +335,7 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
-                var text = script as Text;
+                var text = component as Text;
                 if (text != null)
                 {
                     sb.AppendLine($"- {nameof(text.text)}: {text.text}");
@@ -327,7 +347,7 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
-                var image = script as Image;
+                var image = component as Image;
                 if (image != null)
                 {
                     sb.AppendLine($"- {nameof(image.color)}: {image.color}");
@@ -338,7 +358,7 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
-                var ovrManager = script as OVRManager;
+                var ovrManager = component as OVRManager;
                 if (ovrManager != null)
                 {
                     sb.AppendLine($"- {nameof(ovrManager.usePositionTracking)}: {ovrManager.usePositionTracking}");
@@ -347,9 +367,10 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     sb.AppendLine($"- {nameof(ovrManager.useIPDInPositionTracking)}: {ovrManager.useIPDInPositionTracking}");
                     continue;
                 }
+            }
 
             {
-                var ovrRig = script as OVRCameraRig;
+                var ovrRig = component as OVRCameraRig;
                 if (ovrRig != null)
                 {
                     sb.AppendLine($"- {nameof(ovrRig.usePerEyeCameras)}: {ovrRig.usePerEyeCameras}");
@@ -357,9 +378,93 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
+
+            {
+                var rigidbodyAttributes = component as RigidbodyAttributes;
+                if (rigidbodyAttributes != null)
+                {
+                    sb.AppendLine($"- {nameof(rigidbodyAttributes.useOverrideIterations)}: {rigidbodyAttributes.useOverrideIterations}");
+                    sb.AppendLine($"- {nameof(rigidbodyAttributes.useOverrideTensor)}: {rigidbodyAttributes.useOverrideTensor}");
+                    continue;
+                }
+            }
+
+            {
+                var forceReceiver = component as ForceReceiver;
+                if (forceReceiver != null)
+                {
+                    sb.AppendLine($"- {nameof(forceReceiver.containingAtom)}: {forceReceiver.containingAtom}");
+                    continue;
+                }
+            }
+
+            {
+                var joint = component as ConfigurableJoint;
+                if (joint != null)
+                {
+                    sb.AppendLine($"- {nameof(joint.connectedBody)}: {joint.connectedBody}");
+                    sb.AppendLine($"- {nameof(joint.autoConfigureConnectedAnchor)}: {joint.autoConfigureConnectedAnchor}");
+                    sb.AppendLine($"- {nameof(joint.rotationDriveMode)}: {joint.rotationDriveMode}");
+                    sb.AppendLine($"- {nameof(joint.projectionMode)}: {joint.projectionMode}");
+                    sb.AppendLine($"- {nameof(joint.angularXDrive)}: {joint.angularXDrive}");
+                    sb.AppendLine($"- {nameof(joint.angularXLimitSpring)}: {joint.angularXLimitSpring}");
+                    sb.AppendLine($"- {nameof(joint.angularXMotion)}: {joint.angularXMotion}");
+                    sb.AppendLine($"- {nameof(joint.lowAngularXLimit)}: {joint.lowAngularXLimit}");
+                    sb.AppendLine($"- {nameof(joint.highAngularXLimit)}: {joint.highAngularXLimit}");
+                    sb.AppendLine($"- {nameof(joint.xDrive)}: {joint.xDrive}");
+                    sb.AppendLine($"- {nameof(joint.xMotion)}: {joint.xMotion}");
+                    sb.AppendLine($"- {nameof(joint.angularYMotion)}: {joint.angularYMotion}");
+                    sb.AppendLine($"- {nameof(joint.angularYLimit)}: {joint.angularYLimit}");
+                    sb.AppendLine($"- {nameof(joint.yDrive)}: {joint.yDrive}");
+                    sb.AppendLine($"- {nameof(joint.yMotion)}: {joint.yMotion}");
+                    sb.AppendLine($"- {nameof(joint.angularZMotion)}: {joint.angularZMotion}");
+                    sb.AppendLine($"- {nameof(joint.angularZLimit)}: {joint.angularZLimit}");
+                    sb.AppendLine($"- {nameof(joint.zDrive)}: {joint.zDrive}");
+                    sb.AppendLine($"- {nameof(joint.zMotion)}: {joint.zMotion}");
+                    sb.AppendLine($"- {nameof(joint.angularYZDrive)}: {joint.angularYZDrive}");
+                    sb.AppendLine($"- {nameof(joint.angularYZLimitSpring)}: {joint.angularYZLimitSpring}");
+                    sb.AppendLine($"- {nameof(joint.massScale)}: {joint.massScale}");
+                    sb.AppendLine($"- {nameof(joint.connectedMassScale)}: {joint.connectedMassScale}");
+                    sb.AppendLine($"- {nameof(joint.targetPosition)}: {joint.targetPosition}");
+                    sb.AppendLine($"- {nameof(joint.targetRotation)}: {joint.targetRotation}");
+                    sb.AppendLine($"- {nameof(joint.targetVelocity)}: {joint.targetVelocity}");
+                    sb.AppendLine($"- {nameof(joint.targetAngularVelocity)}: {joint.targetAngularVelocity}");
+                    sb.AppendLine($"- {nameof(joint.anchor)}: {joint.anchor}");
+                    sb.AppendLine($"- {nameof(joint.connectedAnchor)}: {joint.connectedAnchor}");
+                    sb.AppendLine($"- {nameof(joint.slerpDrive)}: {joint.slerpDrive}");
+                    sb.AppendLine($"- {nameof(joint.enableCollision)}: {joint.enableCollision}");
+                    sb.AppendLine($"- {nameof(joint.breakForce)}: {joint.breakForce}");
+                    sb.AppendLine($"- {nameof(joint.breakTorque)}: {joint.breakTorque}");
+                    sb.AppendLine($"- {nameof(joint.swapBodies)}: {joint.swapBodies}");
+                }
+            }
+
+            {
+                var rigidbody = component as Rigidbody;
+                if (rigidbody != null)
+                {
+                    sb.AppendLine($"- {nameof(rigidbody.isKinematic)}: {rigidbody.isKinematic}");
+                    sb.AppendLine($"- {nameof(rigidbody.detectCollisions)}: {rigidbody.detectCollisions}");
+                    sb.AppendLine($"- {nameof(rigidbody.mass)}: {rigidbody.mass}");
+                    sb.AppendLine($"- {nameof(rigidbody.useGravity)}: {rigidbody.useGravity}");
+                    sb.AppendLine($"- {nameof(rigidbody.interpolation)}: {rigidbody.interpolation}");
+                    continue;
+                }
+            }
+
+            {
+                var collider = component as Collider;
+                if (collider != null)
+                {
+                    sb.AppendLine($"- {nameof(collider.attachedRigidbody)}: {collider.attachedRigidbody}");
+                    sb.AppendLine($"- {nameof(collider.isTrigger)}: {collider.isTrigger}");
+                    continue;
+                }
             }
         }
-        _currentScriptsJSON.val = sb.ToString();
+
+        _currentScriptsJSON.val = sb.Length == 0 ? "<i>No components in this gameobject</i>" : sb.ToString();
 
         _nextCurrentScript = Time.realtimeSinceStartup + DisplayScriptsFrequency;
     }
