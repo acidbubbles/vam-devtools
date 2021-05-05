@@ -10,6 +10,27 @@ using System.Linq;
 /// </summary>
 public class DisableCollisionOnSpawnAtom : MVRScript
 {
+    private static HashSet<string> _ignoreDisableCollisionTypes = new HashSet<string>
+    {
+        "ClothGrabSphere",
+        "SimpleSign",
+        "SubScene",
+        "UIText",
+        "VaMLogo",
+        "VaMSign",
+        "WebBrowser",
+        "WebPanel",
+        "WebPanelEmissive",
+        "AudioSource",
+        "RythmAudioSource",
+        "CollisionTrigger",
+        "LookAtTrigger",
+        "UIButton",
+        "UISlider",
+        "UIToggle",
+        "VariableTrigger"
+    };
+
     private JSONStorableBool _disableCollisionJSON;
     private JSONStorableBool _autoSelectJSON;
     private int _lastCount = 0;
@@ -77,7 +98,11 @@ public class DisableCollisionOnSpawnAtom : MVRScript
         if (atoms.Count == 0) return;
         var atom = sctrl.GetAtomByUid(atoms[atoms.Count - 1]);
         if (_disableCollisionJSON.val)
-            atom.collisionEnabledJSON.val = false;
+        {
+            SuperController.LogMessage(atom.type);
+            if(!_ignoreDisableCollisionTypes.Contains(atom.type))
+                atom.collisionEnabledJSON.val = false;
+        }
         if (_autoSelectJSON.val)
             sctrl.SelectController(atom.mainController);
     }
