@@ -441,6 +441,16 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
+                var jointReconnector = component as ConfigurableJointReconnector;
+                if (jointReconnector != null)
+                {
+                    sb.AppendLine($"- {nameof(jointReconnector.controlRelativePositionAndRotation)}: {jointReconnector.controlRelativePositionAndRotation}");
+                    sb.AppendLine($"- {nameof(jointReconnector.rigidBodyToConnect)}: {jointReconnector.rigidBodyToConnect}");
+                    continue;
+                }
+            }
+
+            {
                 var rigidbody = component as Rigidbody;
                 if (rigidbody != null)
                 {
