@@ -99,7 +99,6 @@ public class DisableCollisionOnSpawnAtom : MVRScript
         var atom = sctrl.GetAtomByUid(atoms[atoms.Count - 1]);
         if (_disableCollisionJSON.val)
         {
-            SuperController.LogMessage(atom.type);
             if(!_ignoreDisableCollisionTypes.Contains(atom.type))
                 atom.collisionEnabledJSON.val = false;
         }
