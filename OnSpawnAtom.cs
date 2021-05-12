@@ -12,6 +12,7 @@ public class DisableCollisionOnSpawnAtom : MVRScript
 {
     private static HashSet<string> _ignoreDisableCollisionTypes = new HashSet<string>
     {
+        "SimSheet",
         "ClothGrabSphere",
         "SimpleSign",
         "SubScene",
