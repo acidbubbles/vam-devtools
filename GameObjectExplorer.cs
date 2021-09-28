@@ -76,7 +76,7 @@ public class GameObjectExplorer : MVRScript
             siblingsUI.popupPanelHeight = 900f;
 
             _parentUI = CreateButton("Select Parent", SideLeft);
-            _parentUI.button.onClick.AddListener(() => Select(_currentGameObject?.transform.parent?.gameObject));
+            _parentUI.button.onClick.AddListener(() => Select(_currentGameObject == null ? null : _currentGameObject.transform.parent?.gameObject));
 
             _childrenJSON = new JSONStorableStringChooser("Children", new List<string>(), null, "Select Children");
             _childrenJSON.popupOpenCallback += SyncChildren;
@@ -153,6 +153,12 @@ public class GameObjectExplorer : MVRScript
     
     private void SyncSiblings()
     {
+        if (_currentGameObject == null)
+        {
+            _siblingsJSON.choices = new List<string>();
+            return;
+        }
+
         if (_currentGameObject.transform.parent == null)
         {
             _siblingsJSON.choices = new List<string>(1) {_currentGameObject.name};
@@ -169,6 +175,12 @@ public class GameObjectExplorer : MVRScript
     
     private void SyncChildren()
     {
+        if(_currentGameObject == null)
+        {
+            _childrenJSON.choices = new List<string>();
+            return;
+        }
+
         var current = _currentGameObject.transform;
         var children = new List<string>(current.childCount);
         for (var i = 0; i < current.childCount; i++)
