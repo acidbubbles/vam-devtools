@@ -484,6 +484,35 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
+            {
+                var filter = component as MeshFilter;
+                if (filter != null)
+                {
+                    sb.AppendLine($"- {nameof(filter.mesh)}: {(filter.mesh != null ? filter.mesh.name : "none")}");
+                    sb.AppendLine($"- {nameof(filter.sharedMesh)}: {(filter.sharedMesh != null ? filter.sharedMesh.name : "none")}");
+                    continue;
+                }
+            }
+
+            {
+                var renderer = component as Renderer;
+                if (renderer != null)
+                {
+                    sb.AppendLine($"- {nameof(renderer.material)}: {(renderer.material != null ? renderer.material.name : "none")}");
+                    sb.AppendLine($"  - {nameof(Material.shader)}: {(renderer.material != null && renderer.material.shader != null ? renderer.material.shader.name : "none")}");
+                    continue;
+                }
+            }
+
+            {
+                var renderer = component as MeshRenderer;
+                if (renderer != null)
+                {
+                    sb.AppendLine($"- {nameof(renderer.subMeshStartIndex)}: {renderer.subMeshStartIndex}");
+                    continue;
+                }
+            }
         }
 
         _currentScriptsJSON.val = sb.Length == 0 ? "<i>No components in this gameobject</i>" : sb.ToString();
