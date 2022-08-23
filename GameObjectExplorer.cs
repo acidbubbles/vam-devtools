@@ -513,6 +513,37 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
                     continue;
                 }
             }
+
+            {
+                var bone = component as DAZBone;
+                if (bone != null)
+                {
+                    sb.AppendLine($"- {nameof(bone.baseJointRotation)}: {bone.baseJointRotation}");
+                    sb.AppendLine($"- {nameof(bone.appearanceLocked)}: {bone.appearanceLocked}");
+                    sb.AppendLine($"- {nameof(bone.currentAngles)}: {bone.currentAngles}");
+                    sb.AppendLine($"- {nameof(bone.disableMorph)}: {bone.disableMorph}");
+                    sb.AppendLine($"- {nameof(bone.exclude)}: {bone.exclude}");
+                    sb.AppendLine($"- {nameof(bone.importWorldOrientation)}: {bone.importWorldOrientation}");
+                    sb.AppendLine($"- {nameof(bone.importWorldPosition)}: {bone.importWorldPosition}");
+                    sb.AppendLine($"- {nameof(bone.inverseStartingLocalRotation)}: {bone.inverseStartingLocalRotation}");
+                    sb.AppendLine($"- {nameof(bone.isRoot)}: {bone.isRoot}");
+                    sb.AppendLine($"- {nameof(bone.jointDriveTargetRotationOrder)}: {bone.jointDriveTargetRotationOrder}");
+                    sb.AppendLine($"- {nameof(bone.jointRotationDisabled)}: {bone.jointRotationDisabled}");
+                    sb.AppendLine($"- {nameof(bone.maleWorldOrientation)}: {bone.maleWorldOrientation}");
+                    sb.AppendLine($"- {nameof(bone.rotationOrder)}: {bone.rotationOrder}");
+                    sb.AppendLine($"- {nameof(bone.morphedWorldOrientation)}: {bone.morphedWorldOrientation}");
+                    sb.AppendLine($"- {nameof(bone.worldOrientation)}: {bone.worldOrientation}");
+                    sb.AppendLine($"- {nameof(bone.maleWorldPosition)}: {bone.maleWorldPosition}");
+                    sb.AppendLine($"- {nameof(bone.morphedWorldPosition)}: {bone.morphedWorldPosition}");
+                    sb.AppendLine($"- {nameof(bone.rotationOrder)}: {bone.rotationOrder}");
+                    sb.AppendLine($"- {nameof(bone.rotationOrder)}: {bone.rotationOrder}");
+                    sb.AppendLine($"- {nameof(bone.rotationOrder)}: {bone.rotationOrder}");
+                    sb.AppendLine($"- {nameof(bone.useCustomJointMap)}: {bone.useCustomJointMap}");
+                    sb.AppendLine($"- {nameof(bone.useUnityEulerOrientation)}: {bone.useUnityEulerOrientation}");
+                    sb.AppendLine($"- {nameof(bone.parentBone)}: {(bone.parentBone == null ? "null" : bone.parentBone.name)}");
+                    continue;
+                }
+            }
         }
 
         _currentScriptsJSON.val = sb.Length == 0 ? "<i>No components in this gameobject</i>" : sb.ToString();
