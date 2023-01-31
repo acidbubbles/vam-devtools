@@ -38,9 +38,9 @@ public class GameObjectExplorer : MVRScript
         {
             var sc = SuperController.singleton;
             _wellknown.Add("SceneAtoms (root)", () => SuperController.singleton.transform.parent.gameObject);
-            _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
-            _wellknown.Add($"{nameof(UITransform)} (current plugin)", () => UITransform.gameObject);
-            _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
+            if (UITransform != null) _wellknown.Add($"{nameof(UITransform)} (current plugin)", () => UITransform.gameObject);
+            if (containingAtom != null) _wellknown.Add($"{containingAtom.name} (current atom)", () => containingAtom.gameObject);
+            if (containingAtom != null) _wellknown.Add($"{nameof(UITransform)} (current atom)", () => containingAtom.UITransform.gameObject);
             _wellknown.Add($"{nameof(GameObjectExplorer)} (current plugin)", () => gameObject);
             _wellknown.Add(nameof(sc.navigationRig), () => sc.navigationRig.gameObject);
             _wellknown.Add(nameof(sc.centerCameraTarget), () => sc.centerCameraTarget.gameObject);
@@ -192,6 +192,7 @@ public class GameObjectExplorer : MVRScript
     public void Update()
     {
         // Optimization: do not refresh if the UI is not visible
+        if (ReferenceEquals(_parentUI, null)) return;
         if(!_parentUI.isActiveAndEnabled) return;
 
         if (Time.realtimeSinceStartup >= _nextCurrentInfo)
