@@ -360,6 +360,16 @@ Local:     {_currentGameObject.transform.localRotation.eulerAngles}
             }
 
             {
+                var fitter = component as ContentSizeFitter;
+                if (fitter != null)
+                {
+                    sb.AppendLine($"- {nameof(fitter.horizontalFit)}: {fitter.horizontalFit}");
+                    sb.AppendLine($"- {nameof(fitter.verticalFit)}: {fitter.verticalFit}");
+                    continue;
+                }
+            }
+
+            {
                 var image = component as Image;
                 if (image != null)
                 {
